@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/network")
 // FIX: Changed port from 3000 to 5173 to match your Omen's Vite dev server
-@CrossOrigin(origins = "http://localhost:5173") 
+@CrossOrigin(origins = "*") 
 public class NetworkController {
 
     @Autowired

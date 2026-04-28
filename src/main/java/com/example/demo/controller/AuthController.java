@@ -14,7 +14,7 @@ import com.example.demo.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/v1/network")
-@CrossOrigin(origins = "http://localhost:5173") // Connects to your Omen's Vite port
+@CrossOrigin(origins = "*") // Connects to your Omen's Vite port
 public class AuthController {
 
     @Autowired

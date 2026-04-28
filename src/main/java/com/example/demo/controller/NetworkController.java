@@ -9,7 +9,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/network")
-@CrossOrigin(origins = "http://localhost:3000") // Connects to your Vite frontend
+// FIX: Changed port from 3000 to 5173 to match your Omen's Vite dev server
+@CrossOrigin(origins = "http://localhost:5173") 
 public class NetworkController {
 
     @Autowired
@@ -25,9 +26,21 @@ public class NetworkController {
         return networkService.deployNewNode(node);
     }
 
+    // ADDED: Support for the "EDIT_DATA" feature in your Admin Governance view
+    @PutMapping("/update/{id}")
+    public ServiceNode updateNode(@PathVariable Long id, @RequestBody ServiceNode nodeDetails) {
+        return networkService.updateNodeDetails(id, nodeDetails);
+    }
+
     @DeleteMapping("/revoke/{id}")
     public ResponseEntity<?> revokeNode(@PathVariable Long id) {
         networkService.revokeAccess(id);
         return ResponseEntity.ok().build();
+    }
+    
+    // ADDED: Support for the Rating stars
+    @PostMapping("/nodes/{id}/rate")
+    public ServiceNode rateNode(@PathVariable Long id, @RequestBody java.util.Map<String, Integer> payload) {
+        return networkService.processRating(id, payload.get("score"));
     }
 }

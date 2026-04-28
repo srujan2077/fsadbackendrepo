@@ -26,4 +26,33 @@ public class NetworkService {
     public void revokeAccess(Long id) {
         repository.deleteById(id);
     }
+
+    // --- NEW: Logic for the "EDIT_DATA" button in Admin View ---
+    public ServiceNode updateNodeDetails(Long id, ServiceNode details) {
+        ServiceNode node = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Node not found with id: " + id));
+        
+        node.setTitle(details.getTitle());
+        node.setRate(details.getRate());
+        node.setDesc(details.getDesc()); // This matches the 'desc' field we updated in the Model
+        node.setCategory(details.getCategory());
+        
+        return repository.save(node);
+    }
+
+    // --- NEW: Logic for the Rating Stars handshake ---
+    public ServiceNode processRating(Long id, Integer newScore) {
+        ServiceNode node = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Node not found with id: " + id));
+        
+        double currentRating = node.getRating();
+        int currentCount = node.getReviewCount();
+        
+        // Mathematical average update for the Review system
+        double totalScore = (currentRating * currentCount) + newScore;
+        node.setReviewCount(currentCount + 1);
+        node.setRating(totalScore / (currentCount + 1));
+        
+        return repository.save(node);
+    }
 }
